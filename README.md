@@ -1,6 +1,6 @@
 # ShouldBot
 
-twitter.com/ShouldBot
+https://twitter.com/ShouldBot
 
 A PHP-based Twitterbot that uses the TwitterOAuth library
 When a user asks it a "this or that" question, it splits the text and randomly replies with either "this" or "that"
