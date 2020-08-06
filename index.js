@@ -11,6 +11,8 @@ const Twit = require('twit');
 //   strictSSL:            true,     // optional - requires SSL certificates to be valid.
 // });
 
+// regex (s|S)hould (i|I) .* or .*\?
+
 function shuffle(a) {
   for (let i = a.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
