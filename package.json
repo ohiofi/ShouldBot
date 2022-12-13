@@ -24,7 +24,7 @@
   "homepage": "https://github.com/ohiofi/ShouldBot#readme",
   "dependencies": {
     "dotenv": "^8.2.0",
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "twit": "^2.2.11"
   }
 }
