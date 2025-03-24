@@ -174,8 +174,13 @@ new_replied_posts = set()
 # Reply to new posts and mentions
 for post_id in at_mentions_and_following_posts:
     if str(post_id) not in old_posts:  # Convert post_id to str for consistency
+        if random.random() < 0.01: # 1% chance of skipping in case of replybot + replybot loop
+            new_replied_posts.add(str(post_id))
+            continue
         post_object = mastodon.status(post_id)
-        mastodon.status_post(build_reply(post_object, banlist), in_reply_to_id=post_id)
+        reply_message = build_reply(post_object, banlist)
+        if reply_message:
+            mastodon.status_post(reply_message, in_reply_to_id=post_id)
         new_replied_posts.add(str(post_id))
 
 # Write newly replied posts to file
