@@ -3,9 +3,10 @@ import time
 from dotenv import load_dotenv
 import os
 import random
+import json
 
 load_dotenv()
-banlist = os.getenv("banlist")
+banlist = json.loads(os.getenv("banlist"))
 
 mastodon = Mastodon(
     client_id=os.getenv("client_key"),
@@ -15,13 +16,13 @@ mastodon = Mastodon(
 )
 
 def build_reply(status_object, banlist):
-    if not passed_banlist(status_object.text):
-        print("- Failed Banlist - " + status_object.text)
+    if not passed_banlist(status_object.content, banlist):
+        print("- Failed Banlist - " + status_object.content)
         return None # no reply tweet
     
-    lower_at_mention_str = status_object.text.lower()
+    lower_at_mention_str = status_object.content.lower()
     if lower_at_mention_str.find(" or ") == -1:
-        print("- Failed, Missing Keyword - " + status_object.text)
+        print("- Failed, Missing Keyword - " + status_object.content)
         return None # no reply tweet
     
     lower_at_mention_str = fix_punctuation(lower_at_mention_str)
@@ -44,9 +45,9 @@ def build_reply(status_object, banlist):
     #random_reply = ".@" + status_object.user.screen_name + " " + random_reply  # Prepend the @ mention-er's username
     random_reply += " " + status_object.url  # Append the URL of the @ mention tweet
     
-    print(random_reply)
+    
     # tweet_reply(at_mention_obj, random_reply)
-    #return random_reply
+    return random_reply
 
 def fix_pronouns(text):
     if text.find(" my") > -1:  # Replace " my" with " your"
@@ -177,6 +178,7 @@ for post_id in at_mentions_and_following_posts:
         if random.random() < 0.01: # 1% chance of skipping in case of replybot + replybot loop
             new_replied_posts.add(str(post_id))
             continue
+        
         post_object = mastodon.status(post_id)
         reply_message = build_reply(post_object, banlist)
         if reply_message:
