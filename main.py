@@ -4,6 +4,8 @@ from dotenv import load_dotenv
 import os
 import random
 import json
+from bs4 import BeautifulSoup
+import re
 
 load_dotenv()
 banlist = json.loads(os.getenv("banlist"))
@@ -17,12 +19,12 @@ mastodon = Mastodon(
 
 def build_reply(status_object, banlist):
     if not passed_banlist(status_object.content, banlist):
-        print("- Failed Banlist - " + status_object.content)
+        print("     ❌- Failed Banlist - " + status_object.content)
         return None # no reply tweet
     
-    lower_at_mention_str = status_object.content.lower()
+    lower_at_mention_str = remove_html_tags(status_object.content.lower())
     if lower_at_mention_str.find(" or ") == -1:
-        print("- Failed, Missing Keyword - " + status_object.content)
+        print("     ❌- Failed, Missing Keyword - " + status_object.content)
         return None # no reply tweet
     
     lower_at_mention_str = fix_punctuation(lower_at_mention_str)
@@ -44,7 +46,7 @@ def build_reply(status_object, banlist):
     
     #random_reply = ".@" + status_object.user.screen_name + " " + random_reply  # Prepend the @ mention-er's username
     random_reply += " " + status_object.url  # Append the URL of the @ mention tweet
-    
+    print("✅✅✅✅✅ SUCCESS: "+random_reply)
     
     # tweet_reply(at_mention_obj, random_reply)
     return random_reply
@@ -153,6 +155,17 @@ def read_old_posts(filename="old_posts.txt"):
     with open(filename, "r") as file:
         return set(line.strip() for line in file.readlines())
     
+def remove_html_tags(post_content):
+    result = ""
+    soup = BeautifulSoup(post_content, "html.parser")
+    for each in soup.find_all('p'):  # Find all <p> elements
+        result += each.get_text()  # ✅ Extract text content
+        if result:  # ✅ Ensure text is not None or empty
+            result += re.sub(r'[\t\n ]+', ' ', result).strip()  # ✅ Clean spaces
+    return result
+
+
+
 # Write new posts to file
 def write_new_posts(new_posts, filename="old_posts.txt"):
     with open(filename, "a") as file:
