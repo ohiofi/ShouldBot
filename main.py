@@ -111,6 +111,8 @@ def fix_punctuation(text):
     
     while text.find("@shouldbot") > -1:  # Convert "@shouldbot" to ""
         text = text.replace("@shouldbot", "")
+    while text.find("@shouldbot@mastodon.social") > -1:  # Convert "@shouldbot@mastodon.social" to ""
+        text = text.replace("@shouldbot@mastodon.social", "")
     
     while text.find("?") > -1:  # Convert "?" to ""
         text = text.replace("?", "")
@@ -161,10 +163,10 @@ def remove_html_tags(post_content):
     result = ""
     soup = BeautifulSoup(post_content, "html.parser")
     for each in soup.find_all('p'):  # Find all <p> elements
-        result += each.get_text()  # ✅ Extract text content
-        if result:  # ✅ Ensure text is not None or empty
-            result += re.sub(r'[\t\n ]+', ' ', result).strip()  # ✅ Clean spaces
-    return result
+        temp = each.get_text() + " "  # ✅ Extract text content
+        if temp:  # ✅ Ensure text is not None or empty
+            result += re.sub(r'[\t\n ]+', ' ', temp)  # ✅ Clean spaces
+    return result.strip()
 
 
 
