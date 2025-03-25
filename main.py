@@ -18,6 +18,7 @@ mastodon = Mastodon(
 )
 
 def build_reply(status_object, banlist):
+    print(status_object.content)
     if not passed_banlist(status_object.content, banlist):
         print("     ❌- Failed Banlist - " + status_object.content)
         return None # no reply tweet
@@ -45,7 +46,8 @@ def build_reply(status_object, banlist):
         random_reply = random_reply[:450]
     
     #random_reply = ".@" + status_object.user.screen_name + " " + random_reply  # Prepend the @ mention-er's username
-    random_reply += " " + status_object.url  # Append the URL of the @ mention tweet
+    random_reply += "\n\n" + status_object.url  # Append the URL of the @ mention tweet
+    # '<a href="'+status_object.url+'" target="_blank" rel="nofollow noopener" translate="no"><span class="ellipsis">'+status_object.url+'</span></a>'
     print("✅✅✅✅✅ SUCCESS: "+random_reply)
     
     # tweet_reply(at_mention_obj, random_reply)
