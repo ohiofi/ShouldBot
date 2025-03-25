@@ -45,7 +45,7 @@ def build_reply(status_object, banlist):
     if len(random_reply) > 450:  # On standard Mastodon instances, the default character limit for posts is 500 characters
         random_reply = random_reply[:450]
     
-    #random_reply = ".@" + status_object.user.screen_name + " " + random_reply  # Prepend the @ mention-er's username
+    random_reply = "@" + status_object.account.acct + " " + random_reply  # Prepend the @ mention-er's username
     random_reply += "\n\n" + status_object.url  # Append the URL of the @ mention tweet
     # '<a href="'+status_object.url+'" target="_blank" rel="nofollow noopener" translate="no"><span class="ellipsis">'+status_object.url+'</span></a>'
     print("✅✅✅✅✅ SUCCESS: "+random_reply)
